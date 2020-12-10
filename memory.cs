@@ -119,30 +119,39 @@ namespace Memory
 
         unsafe public static T Read<T>(IntPtr address)
         {
-            var val = 0;
+            object val = 0;
 
-            if (typeof(T) == typeof(int)) 
+            if (typeof(T) == typeof(int))
             {
                 val = BitConverter.ToInt32(ReadBytes(address, sizeof(int)), 0);
-            }else if (typeof(T) == typeof(uint))
+            }
+            else if (typeof(T) == typeof(uint))
             {
-                val = BitConverter.ToInt32(ReadBytes(address, sizeof(uint)), 0);
+                val = BitConverter.ToUInt32(ReadBytes(address, sizeof(uint)), 0);
             }
             else if (typeof(T) == typeof(long))
             {
-                val = BitConverter.ToInt32(ReadBytes(address, sizeof(long)), 0);
+                val = BitConverter.ToInt64(ReadBytes(address, sizeof(long)), 0);
             }
             else if (typeof(T) == typeof(byte))
             {
-                val = BitConverter.ToInt32(ReadBytes(address, sizeof(byte)), 0);
+                val = ReadBytes(address, sizeof(byte))[0];
             }
             else if (typeof(T) == typeof(IntPtr))
             {
-                val = BitConverter.ToInt32(ReadBytes(address, sizeof(IntPtr)), 0);
+                val = BitConverter.ToUInt32(ReadBytes(address, sizeof(IntPtr)), 0);
             }
             else if (typeof(T) == typeof(UIntPtr))
             {
-                val = BitConverter.ToInt32(ReadBytes(address, sizeof(UIntPtr)), 0);
+                val = BitConverter.ToUInt64(ReadBytes(address, sizeof(UIntPtr)), 0);
+            }
+            else if (typeof(T) == typeof(float))
+            {
+                val = BitConverter.ToSingle(ReadBytes(address, sizeof(float)), 0);
+            }
+            else if (typeof(T) == typeof(double))
+            {
+                val = BitConverter.ToDouble(ReadBytes(address, sizeof(double)), 0);
             }
 
             return (T)Convert.ChangeType(val, typeof(T));
@@ -201,16 +210,6 @@ namespace Memory
                 byte[] buffer = BitConverter.GetBytes((uint)val);
                 WriteBytes(address, buffer, sizeof(UIntPtr));
             }
-        }
-
-        public static float ReadFloat(IntPtr address) 
-        {
-            return BitConverter.ToSingle(ReadBytes(address, sizeof(float)), 0);
-        }
-
-        public static double ReadDouble(IntPtr address)
-        {
-            return BitConverter.ToDouble(ReadBytes(address, sizeof(double)), 0);
         }
     }
 }
